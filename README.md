@@ -21,6 +21,8 @@
 - [Project architecture](#project-architecture)
 - [Set up the conda environment](#set-up-the-conda-environment)
 - [Running on Leo](#running-on-leo)
+    - [Set up the Leonardo environment](#set-up-the-leonardo-environment)
+    - [Running the project on Leonardo](#running-the-project-on-leonardo)
 
 ## Task and workflow
 
@@ -172,18 +174,24 @@ This file contains the data related with each galaxy, however in this project we
 
 For a cleaner implementation the project was implemented in a modular way. We have a main jupyter notebook where we run the functions and a `src` folder where we have the definition of a set of useful functions. 
 
+We add some python scripts for running easier the project in Leonardo cluster, however it can be easy changed to any other cluster that uses slurm and conda virtual environments.
+
 Also we have an `assets` folder that contains all the images and auxiliary files helpful for the report. The project structure is represented in the following graph
 
 ```
 ./
 ├── Project1.ipynb
-├── project1.py
 ├── group_project_env.yml
 ├── README.md
 ├── file_list.txt
 ├── .gitignore
+├── project1.py
+├── writefile.py
+├── create_env.sh
+├── galaxy.job
 ├── assets/
-│    └── *.png
+│   ├── *.csv
+│   └── *.png
 ├── src/
 │    ├── __init__.py
 │    └── *.py
@@ -220,3 +228,54 @@ conda env update -f group_project_env.yml --prune
 ## Running on Leo
 
 We translate the notebook content into a python script for make easier running the code on Leonardo. For running the code on Leonardo we need the following files:
+
+```
+./
+├── project1.py
+├── writefile.py
+├── create_env.sh
+├── file_list.txt
+└── galaxy.job
+```
+
+### Set up the Leonardo environment
+
+> [!IMPORTANT]
+> You should have a conda configuration on your `$HOME/.bashrc` file if you have a custom source or a different path you can edit the `create_env.sh` file changing the path to the file.
+
+Creating a conda environment using `.yml` files can be tricky, that's why we create an `.sh` that automatically creates an environment named `galaxy`. You just need to run the following command:
+
+```bash
+bash create_env.sh
+```
+
+you can check if it was created by running:
+
+```bash
+conda env list
+conda activate galaxy
+```
+
+> [!NOTE]
+> If you want to create your own environment you can do it, but we suggest to name it galaxy too so you don't need to edit the jobfile.
+
+
+### Running the project on Leonardo
+
+> [!IMPORTANT]
+> This way of running will also work only in Leonardo if your files are there, however if you want to run it on other systems were you have the files you can easily do it by changing the variable `folder_path` inside the `src/get_files.py` file on the function `write_file_list()` (line 146) with the **absolute** path to the images **ignoring the first /**.
+
+Inside the `writefile.py` python script is defined a variable named  `data_size` (line 7), if you want to change the number of images for use in the model you just need to change ethe value of that variable. Finally, you can run the same python script for fetch the data into `data/images` folder.
+
+
+> [!CAUTION]
+> If you are reducing the num size of the dataset you have to delete the images and then run the `writefile.py` python script.
+
+Finally, you can submit the job using the `galaxy.job` using slurm, i.e,
+
+```bash
+sbatch galaxy.job
+```
+
+> [!NOTE]
+> If you are running in a different cluster and/or if you want to use a different environment  you have to change the `galaxy.job` file.

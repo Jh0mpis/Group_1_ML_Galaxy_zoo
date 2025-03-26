@@ -1,6 +1,10 @@
 module load anaconda3/
 
-source $HOME/Conda_setting.txt
+if [ ! -f $HOME/Conda_setting.txt ]; then
+  source $HOME/.bashrc
+else 
+  source $HOME/Conda_setting.txt
+fi
 
 conda create -n galaxy python=3.10
 conda activate galaxy
