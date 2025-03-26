@@ -20,6 +20,7 @@
 - [About the data](#about-the-data)
 - [Project architecture](#project-architecture)
 - [Set up the conda environment](#set-up-the-conda-environment)
+- [Running on Leo](#running-on-leo)
 
 ## Task and workflow
 
@@ -176,6 +177,7 @@ Also we have an `assets` folder that contains all the images and auxiliary files
 ```
 ./
 ├── Project1.ipynb
+├── project1.py
 ├── group_project_env.yml
 ├── README.md
 ├── file_list.txt
@@ -214,3 +216,7 @@ If the environment is already created with a previous version of the same `.yml`
 ```bash
 conda env update -f group_project_env.yml --prune 
 ```
+
+## Running on Leo
+
+We translate the notebook content into a python script for make easier running the code on Leonardo. For running the code on Leonardo we need the following files:
