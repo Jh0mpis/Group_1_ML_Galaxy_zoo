@@ -276,7 +276,7 @@ from src.get_symmetry import get_all_symmetries
 # Get the data related with the pixels
 get_images_column = np.linspace(0, (424-2 * borders)*(424-2 * borders) - 1, (424-2 * borders)*(424-2 * borders))
 # Reshape the image and assign it to an array
-images_array = np.reshape(galaxy_data[get_images_column].to_numpy(), shape = (galaxy_data.shape[0], (424-2*borders), (424-2*borders)))
+images_array = np.reshape(galaxy_data[get_images_column].to_numpy(), (galaxy_data.shape[0], (424-2*borders), (424-2*borders)))
 
 
 # In[11]:

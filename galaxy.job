@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH -A ict25_mhpc_0
-#SBATCH --qos=boost_qos_dbg
+##SBATCH --qos=boost_qos_dbg
 #SBATCH -p boost_usr_prod
 #SBATCH --time 00:30:00       # format: HH:MM:SS
 #SBATCH -N 1
@@ -9,10 +9,14 @@
 #SBATCH --job-name=GAlaxy
 #SBATCH --output=%jgalaxy.out
 
-source $HOME/Conda_setting.txt
+if [ ! -f $HOME/Conda_setting.txt ]; then
+  source $HOME/.bashrc
+else 
+  source $HOME/Conda_setting.txt
+fi
 
 module load anaconda3/2023.09-0
 
 conda activate galaxy
 
-python3 project1.py
+python project1.py

@@ -116,16 +116,6 @@ def write_file_list(total_data, overwrite = False, Ei = False, Scd = False):
                 replace = False
             )
         )
-        '''
-        numbers.extend(
-            np.random.choice(
-                labels_mapped[labels_mapped['gz2class'].str.contains(r"\bSBd", regex = True)]["asset_id"].to_numpy(), 
-                data_per_class//2, 
-                replace = False
-            )
-        )
-        '''
-        
     
         if Ei:
             numbers.extend(
@@ -151,7 +141,6 @@ def write_file_list(total_data, overwrite = False, Ei = False, Scd = False):
                     replace = False
                 )
             )
-    
     
         # Path in leonardo
         folder_path = "leonardo_work/ICT24_MHPC/data_projects/Project_1/data/images/"

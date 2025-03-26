@@ -2,7 +2,7 @@
 
 <a href = "https://github.com/Jh0mpis"><img src = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/18cef78d-8d34-4cfb-b9c7-662588f56c7a/de5p4qp-e0a4b0c8-e797-4bbf-8b4a-4d5523871a2a.jpg/v1/fill/w_1280,h_1768,q_75,strp/guts___berserker_armor_by_stephane_piovan_draw_de5p4qp-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTc2OCIsInBhdGgiOiJcL2ZcLzE4Y2VmNzhkLThkMzQtNGNmYi1iOWM3LTY2MjU4OGY1NmM3YVwvZGU1cDRxcC1lMGE0YjBjOC1lNzk3LTRiYmYtOGI0YS00ZDU1MjM4NzFhMmEuanBnIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.MsRnw-FYOYxWdtgJBJQktAgxvPV3hWjwMsBMY7-1Q5A" width="40rm"> </a> **Moreno Triana Jhon Sebastián**
 
-<a href = "https://github.com/Nisha2592"><b>Nisha</b></a> 
+<a href = "https://github.com/Nisha2592"><img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.happywalagift.com%2Fwp-content%2Fuploads%2F2015%2F08%2FIndia_flag-2016.jpg&f=1&nofb=1&ipt=eb8b8ee04f9cef101162720fc0f0cda88960235f7157fa05d26cc149a29720e4&ipo=images" width="40rm"></a><b>Nisha</b>
 
 <a href = "https://github.com/cristiano-mhpc" ><img src = "https://icons.iconarchive.com/icons/hektakun/pokemon/72/006-Charizard-icon.png" width="40rm"></a> **Tica Christian**
 
@@ -20,6 +20,9 @@
 - [About the data](#about-the-data)
 - [Project architecture](#project-architecture)
 - [Set up the conda environment](#set-up-the-conda-environment)
+- [Running on Leo](#running-on-leo)
+    - [Set up the Leonardo environment](#set-up-the-leonardo-environment)
+    - [Running the project on Leonardo](#running-the-project-on-leonardo)
 
 ## Task and workflow
 
@@ -171,6 +174,8 @@ This file contains the data related with each galaxy, however in this project we
 
 For a cleaner implementation the project was implemented in a modular way. We have a main jupyter notebook where we run the functions and a `src` folder where we have the definition of a set of useful functions. 
 
+We add some python scripts for running easier the project in Leonardo cluster, however it can be easy changed to any other cluster that uses slurm and conda virtual environments.
+
 Also we have an `assets` folder that contains all the images and auxiliary files helpful for the report. The project structure is represented in the following graph
 
 ```
@@ -180,8 +185,13 @@ Also we have an `assets` folder that contains all the images and auxiliary files
 ├── README.md
 ├── file_list.txt
 ├── .gitignore
+├── project1.py
+├── writefile.py
+├── create_env.sh
+├── galaxy.job
 ├── assets/
-│    └── *.png
+│   ├── *.csv
+│   └── *.png
 ├── src/
 │    ├── __init__.py
 │    └── *.py
@@ -214,3 +224,58 @@ If the environment is already created with a previous version of the same `.yml`
 ```bash
 conda env update -f group_project_env.yml --prune 
 ```
+
+## Running on Leo
+
+We translate the notebook content into a python script for make easier running the code on Leonardo. For running the code on Leonardo we need the following files:
+
+```
+./
+├── project1.py
+├── writefile.py
+├── create_env.sh
+├── file_list.txt
+└── galaxy.job
+```
+
+### Set up the Leonardo environment
+
+> [!IMPORTANT]
+> You should have a conda configuration on your `$HOME/.bashrc` file if you have a custom source or a different path you can edit the `create_env.sh` file changing the path to the file.
+
+Creating a conda environment using `.yml` files can be tricky, that's why we create an `.sh` that automatically creates an environment named `galaxy`. You just need to run the following command:
+
+```bash
+bash create_env.sh
+```
+
+you can check if it was created by running:
+
+```bash
+conda env list
+conda activate galaxy
+```
+
+> [!NOTE]
+> If you want to create your own environment you can do it, but we suggest to name it galaxy too so you don't need to edit the jobfile.
+
+
+### Running the project on Leonardo
+
+> [!IMPORTANT]
+> This way of running will also work only in Leonardo if your files are there, however if you want to run it on other systems were you have the files you can easily do it by changing the variable `folder_path` inside the `src/get_files.py` file on the function `write_file_list()` (line 146) with the **absolute** path to the images **ignoring the first /**.
+
+Inside the `writefile.py` python script is defined a variable named  `data_size` (line 7), if you want to change the number of images for use in the model you just need to change ethe value of that variable. Finally, you can run the same python script for fetch the data into `data/images` folder.
+
+
+> [!CAUTION]
+> If you are reducing the num size of the dataset you have to delete the images and then run the `writefile.py` python script.
+
+Finally, you can submit the job using the `galaxy.job` using slurm, i.e,
+
+```bash
+sbatch galaxy.job
+```
+
+> [!NOTE]
+> If you are running in a different cluster and/or if you want to use a different environment  you have to change the `galaxy.job` file.
